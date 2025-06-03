@@ -1,0 +1,47 @@
+﻿@model CreateVM
+
+@{
+    ViewBag.Title = "Create Employee";
+}
+
+<form asp-controller="Employees" asp-action="Create" style="width: 300px;">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" />
+    <span asp-validation-for="Name"></span>
+
+    <label asp-for="Email"></label>
+    <input asp-for="Email" />
+    <span asp-validation-for="Email"></span>
+    <br />
+
+    <label asp-for="Salary"></label>
+    <input asp-for="Salary" />
+    <span asp-validation-for="Salary"></span>
+    <br />
+
+    <label asp-for="BotCheck"></label>
+    <input asp-for="BotCheck" />
+    <span asp-validation-for="BotCheck"></span>
+    <br />
+
+    <input type="submit" value="Save" />
+    <div asp-validation-summary="All"></div>
+</form>
+
+@section scripts
+{
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.1.min.js"
+            asp-fallback-src="~/scripts/jquery/jquery.min.js"
+            asp-fallback-test="window.jQuery">
+    </script>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.2/jquery.validate.min.js"
+            asp-fallback-src="~/scripts/jquery-validate/jquery.validate.min.js"
+            asp-fallback-test="$.validator">
+    </script>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"
+            asp-fallback-src="~/scripts/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+            asp-fallback-test="$.validator.unobtrusive">
+    </script>
+}

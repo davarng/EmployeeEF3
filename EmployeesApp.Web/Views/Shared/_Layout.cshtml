@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/@@picocss/pico@@latest/css/pico.classless.min.css">
+</head>
+<body>
+    <partial name="_InfoBox" model="DateTime.Now" />
+    <div style="margin: 50px;">
+        <a asp-controller="Employees" asp-action="Index">Home</a>
+        <a asp-controller="Employees" asp-action="Create">Create</a><br /><br />
+
+        <h2>@ViewBag.Title</h2>
+
+        <div>
+            @RenderBody()
+        </div>
+
+        <footer>- Copyright © 2025 Orkanius AB -</footer>
+    </div>
+    <partial name="_InfoBox" model="DateTime.Now" />
+    @RenderSection("Scripts", false)
+</body>
+</html>
