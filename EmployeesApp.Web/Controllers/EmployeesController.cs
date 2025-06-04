@@ -26,7 +26,7 @@ public class EmployeesController(IEmployeeService service, ICompanyService coSer
                 ShowAsHighlighted = service.CheckIsVIP(e),
             })]
         };
-
+        coService.DeleteAsync(1);
         return View(viewModel);
     }
 
