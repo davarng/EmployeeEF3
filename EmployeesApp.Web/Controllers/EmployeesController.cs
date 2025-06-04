@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeesApp.Web.Controllers;
 
-public class EmployeesController(IEmployeeService service) : Controller
+public class EmployeesController(IEmployeeService service, ICompanyService coService) : Controller
 {
     [HttpGet("")]
     // [ActionName("Foo")]

@@ -38,6 +38,7 @@ public class EmployeesControllerTests
     {
         // Arrange
         var employeeService = new Mock<IEmployeeService>();
+        var companyService = new Mock<ICompanyService>();
         employeeService.Setup(service => service.GetAllAsync())
             .Returns(Task.FromResult(new Employee[]
             {
@@ -46,7 +47,7 @@ public class EmployeesControllerTests
                 new Employee { Email = "hotmail@hotmail.com", Name = "Namn" }
             }));
 
-        var employeeController = new EmployeesController(employeeService.Object);
+        var employeeController = new EmployeesController(employeeService.Object, companyService.Object);
 
         // Act
         var result = await employeeController.IndexAsync();
@@ -64,7 +65,8 @@ public class EmployeesControllerTests
         // Arrange
         var viewModel = new CreateVM { Email = email, Name = name, Salary = 0m, BotCheck = botcheck };
         var mockService = new Mock<IEmployeeService>();
-        var controller = new EmployeesController(mockService.Object);
+        var companyService = new Mock<ICompanyService>();
+        var controller = new EmployeesController(mockService.Object, companyService.Object);
 
         // Act
         var result = await controller.CreateAsync(viewModel);
@@ -112,7 +114,8 @@ public class EmployeesControllerTests
     {
         // Arrange
         var employeeService = new Mock<IEmployeeService>();
-        var employeeController = new EmployeesController(employeeService.Object);
+        var companyService = new Mock<ICompanyService>();
+        var employeeController = new EmployeesController(employeeService.Object, companyService.Object);
         var employee = new Employee
         {
             Name = "Alice",
