@@ -5,6 +5,7 @@ using EmployeesApp.Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
+using EmployeesApp.Application.Employees.Interfaces;
 
 namespace EmployeesApp.Terminal;
 internal class Program
@@ -28,7 +29,9 @@ internal class Program
         // Create and use the context
 
         var context = new ApplicationContext(options, NullLogger<ApplicationContext>.Instance);
-        //employeeService = new(new UnitOfWork());
+        ICompanyRepository companyRepository = new CompanyRepository(context);
+        IEmployeeRepository employeeRepository = new EmployeeRepository(context);
+        employeeService = new(new UnitOfWork(context, companyRepository, employeeRepository));
 
         await ListAllEmployeesAsync();
         await ListEmployeeAsync(562);
