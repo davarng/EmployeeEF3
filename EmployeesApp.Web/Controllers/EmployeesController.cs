@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeesApp.Web.Controllers;
 
-public class EmployeesController(IEmployeeService service, ICompanyService coService) : Controller
+public class EmployeesController(IEmployeeService service) : Controller
 {
     [HttpGet("")]
     // [ActionName("Foo")]
@@ -26,7 +26,7 @@ public class EmployeesController(IEmployeeService service, ICompanyService coSer
                 ShowAsHighlighted = service.CheckIsVIP(e),
             })]
         };
-        await coService.DeleteAsync(1);
+
         return View(viewModel);
     }
 

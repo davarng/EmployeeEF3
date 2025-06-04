@@ -4,6 +4,7 @@ using EmployeesApp.Domain.Entities;
 using EmployeesApp.Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace EmployeesApp.Terminal;
 internal class Program
@@ -25,7 +26,8 @@ internal class Program
             .Options;
 
         // Create and use the context
-        var context = new ApplicationContext(options);
+
+        var context = new ApplicationContext(options, NullLogger<ApplicationContext>.Instance);
         employeeService = new(new EmployeeRepository(context));
 
         await ListAllEmployeesAsync();
