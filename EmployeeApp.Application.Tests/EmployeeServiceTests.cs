@@ -1,4 +1,5 @@
-﻿using EmployeesApp.Application.Employees.Interfaces;
+﻿using EmployeesApp.Application;
+using EmployeesApp.Application.Employees.Interfaces;
 using EmployeesApp.Application.Employees.Services;
 using EmployeesApp.Domain.Entities;
 using Moq;
@@ -12,7 +13,11 @@ public class EmployeeServiceTests
     {
         // Arrange
         var mockRepo = new Mock<IEmployeeRepository>();
-        var service = new EmployeeService(mockRepo.Object);
+
+        var unitOfWork = Mock.Of<IUnitOfWork>(u => u.Employees == mockRepo.Object);
+        var service = new EmployeeService(unitOfWork);
+
+
 
         var employee = new Employee
         {
@@ -34,12 +39,17 @@ public class EmployeeServiceTests
     {
         // Arrange
         var employee = new Employee { Id = 1, Name = "Ben", Email = "dover@hotmale.com" };
+
         var mockRepo = new Mock<IEmployeeRepository>();
+
+        var unitOfWork = Mock.Of<IUnitOfWork>(u => u.Employees == mockRepo.Object);
+        var service = new EmployeeService(unitOfWork);
+
         mockRepo
             .Setup(r => r.GetByIdAsync(1))
             .Returns(Task.FromResult(employee)); // .Returns(employee);
 
-        var service = new EmployeeService(mockRepo.Object);
+
 
         // Act
         var result = await service.GetByIdAsync(1);
@@ -56,8 +66,11 @@ public class EmployeeServiceTests
         mockRepo
             .Setup(r => r.GetByIdAsync(999))
             .Returns(Task.FromResult<Employee?>(null));
+        var unitOfWork = Mock.Of<IUnitOfWork>(u => u.Employees == mockRepo.Object);
+        var service = new EmployeeService(unitOfWork);
 
-        var service = new EmployeeService(mockRepo.Object);
+
+
 
         // Act
         var result = await Record.ExceptionAsync(() => service.GetByIdAsync(999));
@@ -75,7 +88,9 @@ public class EmployeeServiceTests
     public void CheckIsVIP_WithVIPEmail_ReturnsExpectedResult(string email, bool expected)
     {
         var employee = new Employee { Email = email };
-        var service = new EmployeeService(Mock.Of<IEmployeeRepository>());
+        var mockRepo = new Mock<IEmployeeRepository>();
+        var unitOfWork = Mock.Of<IUnitOfWork>(u => u.Employees == mockRepo.Object);
+        var service = new EmployeeService(unitOfWork);
 
         var result = service.CheckIsVIP(employee);
 

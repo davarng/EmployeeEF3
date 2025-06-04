@@ -28,7 +28,7 @@ internal class Program
         // Create and use the context
 
         var context = new ApplicationContext(options, NullLogger<ApplicationContext>.Instance);
-        employeeService = new(new EmployeeRepository(context));
+        //employeeService = new(new UnitOfWork());
 
         await ListAllEmployeesAsync();
         await ListEmployeeAsync(562);
