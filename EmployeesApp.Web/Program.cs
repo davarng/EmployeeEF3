@@ -4,6 +4,7 @@ using EmployeesApp.Application.Employees.Services;
 using EmployeesApp.Infrastructure.Persistance.Repositories;
 using EmployeesApp.Web.Models;
 using Microsoft.EntityFrameworkCore;
+using EmployeesApp.Application;
 
 namespace EmployeesApp.Web;
 
@@ -16,6 +17,9 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+        builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+        builder.Services.AddScoped<ICompanyService, CompanyService>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<MyLogServiceFilterAttribute>();
 
         // Hämta connection-strängen från AppSettings.json​

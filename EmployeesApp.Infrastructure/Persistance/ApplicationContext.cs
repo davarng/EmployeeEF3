@@ -1,5 +1,6 @@
 ﻿using EmployeesApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,10 +11,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EmployeesApp.Infrastructure.Persistance;
 
-public class ApplicationContext(DbContextOptions<ApplicationContext> options)
+public class ApplicationContext(DbContextOptions<ApplicationContext> options, ILogger <ApplicationContext> logger)
     : DbContext(options)
 {
     public DbSet<Employee> Employees { get; set; } = null!;
+    public DbSet<Company> Companies { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,6 +32,12 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options)
             .HasColumnType(SqlDbType.Money.ToString())
             .HasDefaultValue(0m)
             .IsRequired();
+
+        modelBuilder.Entity<Company>()
+            .HasMany(c => c.Employees)
+            .WithOne(e => e.Company)
+            .HasForeignKey(e => e.CompanyId)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
         modelBuilder.Entity<Employee>().HasData(
@@ -51,5 +59,34 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options)
                 Name = "Mads Torgersen",
                 Email = "Admin.Torgersen@outlook.com",
             });
+
+
     }
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var modifiedEntries = ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Modified);
+
+        foreach (var entry in modifiedEntries)
+        {
+            var entityName = entry.Entity.GetType().Name;
+            var primaryKey = entry.Properties
+                .FirstOrDefault(p => p.Metadata.IsPrimaryKey())?.CurrentValue;
+
+            foreach (var prop in entry.Properties)
+            {
+                if (prop.IsModified)
+                {
+                    var original = prop.OriginalValue?.ToString() ?? "null";
+                    var current = prop.CurrentValue?.ToString() ?? "null";
+
+                    logger.LogInformation(
+                        $"{entityName} ({primaryKey}), {prop.Metadata.Name}: {original} -> {current}");
+                }
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
 }

@@ -1,12 +1,13 @@
 ﻿using EmployeesApp.Application.Employees.Interfaces;
 using EmployeesApp.Domain.Entities;
+using EmployeesApp.Infrastructure.Persistance;
 using EmployeesApp.Web.Models;
 using EmployeesApp.Web.Views.Employees;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeesApp.Web.Controllers;
 
-public class EmployeesController(IEmployeeService service) : Controller
+public class EmployeesController(IEmployeeService service, ICompanyService coService) : Controller
 {
     [HttpGet("")]
     // [ActionName("Foo")]
@@ -25,7 +26,7 @@ public class EmployeesController(IEmployeeService service) : Controller
                 ShowAsHighlighted = service.CheckIsVIP(e),
             })]
         };
-
+        await coService.DeleteAsync(1);
         return View(viewModel);
     }
 
