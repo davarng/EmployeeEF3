@@ -59,7 +59,7 @@ public class EmployeesControllerTests
 
     [Theory]
     [InlineData("other@other.com", "other", 4, true)]
-    public void Create_WithValidViewModel_ReturnsViewResult(string email, string name, int botcheck, bool expected)
+    public async Task Create_WithValidViewModel_ReturnsViewResultAsync(string email, string name, int botcheck, bool expected)
     {
         // Arrange
         var viewModel = new CreateVM { Email = email, Name = name, Salary = 0m, BotCheck = botcheck };
@@ -67,13 +67,13 @@ public class EmployeesControllerTests
         var controller = new EmployeesController(mockService.Object);
 
         // Act
-        var result = controller.CreateAsync(viewModel);
+        var result = await controller.CreateAsync(viewModel);
 
         // Assert
         if (expected)
         {
             var redirect = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(EmployeesController.IndexAsync), redirect.ActionName);
+            Assert.Equal(nameof(EmployeesController.IndexAsync).Replace("Async", string.Empty), redirect.ActionName);
             mockService.Verify(s => s.AddAsync(It.Is<Employee>(e =>
                 e.Email == email &&
                 e.Name == name)), Times.Once);

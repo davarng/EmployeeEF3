@@ -9,6 +9,7 @@ namespace EmployeesApp.Web.Controllers;
 public class EmployeesController(IEmployeeService service) : Controller
 {
     [HttpGet("")]
+    // [ActionName("Foo")]
     public async Task<IActionResult> IndexAsync()
     {
         var model = await service.GetAllAsync();
